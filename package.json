@@ -1,16 +1,15 @@
 {
-  "name": "db_course_work_fork",
-  "version": "1.0.0",
+  "name": "dis-edu",
+  "version": "2.1.0",
   "main": "index.js",
   "description": "Databases course work template",
   "repository": "https://github.com/boldak/dis-edu",
-  "author": "Sviatoslav Shesterov <mwadman2018@gmail.com>",
-  "license": "UNLICENSED",
+  "author": "Andrey Boldak <boldak.andrey@gmail.com>",
+  "license": "ECL 2.0",
   "scripts": {
-    "docs:dev": "npx --openssl-legacy-provider vuepress dev docs",
+    "docs:dev": "npx vuepress dev docs",
     "docs:build": "npx vuepress build docs",
-    "publish": "publish.sh",
-    "prebuild": "rimraf dist"
+    "publish": "publish.sh"
   },
   "dependencies": {
     "@vuepress/plugin-back-to-top": "^1.7.1",
