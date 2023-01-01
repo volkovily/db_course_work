@@ -98,7 +98,7 @@ router.post("/board", (req, res) => {
       }
 
       res.status(200).json({
-        data: result,
+        message: "Successfully created board - " + name,
       });
     }
   );
@@ -106,23 +106,47 @@ router.post("/board", (req, res) => {
 
 router.put("/board/:id", (req, res) => {
   const { id } = req.params;
-  const { name, description, project_id } = req.body;
 
   connection.query(
-    sql.updateBoard,
-    [name, description, project_id, id],
-    (err, result) => {
+    `select * from board where id = unhex("${id}")`,
+    (err, [board]) => {
       if (err) {
-        console.log(err);
         res.status(500).json({
           message: ERRORS.SERVER_ERROR,
         });
         return;
       }
 
-      res.status(200).json({
-        data: result,
-      });
+      if (!board) {
+        res.status(404).json({
+          message: ERRORS.NOT_FOUND,
+        });
+        return;
+      }
+
+      const { name, description, project_id } = {
+        ...board,
+        project_id: decodeId(board.project_id),
+        ...req.body,
+      };
+
+      connection.query(
+        sql.updateBoard,
+        [name, description, project_id, id],
+        (err, result) => {
+          if (err) {
+            console.log(err);
+            res.status(500).json({
+              message: ERRORS.SERVER_ERROR,
+            });
+            return;
+          }
+
+          res.status(200).json({
+            message: "Successfully updated board " + name,
+          });
+        }
+      );
     }
   );
 });
@@ -140,7 +164,7 @@ router.delete("/board/:id", (req, res) => {
     }
 
     res.status(200).json({
-      data: result,
+      message: "Successfully deleted board",
     });
   });
 });
